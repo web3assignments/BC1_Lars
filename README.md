@@ -1,7 +1,7 @@
-# BC1_Lars
-bettercodehub: [![BCH compliance](https://bettercodehub.com/edge/badge/web3assignments/BC1_Lars?branch=master)](https://bettercodehub.com/) 
+# BC2_Lars
+bettercodehub: [![BCH compliance](https://bettercodehub.com/edge/badge/web3assignments/BC2_Lars?branch=master)](https://bettercodehub.com/) 
 <br> 
-THUASMinorBlockchain_20192020B_IT repository for BC1_Lars
+THUASMinorBlockchain_20192020B_IT repository for BC2_Lars
 <br> 
 THUASMinorBlockchain_20192020B_IT: [minor] 
 <br> 
