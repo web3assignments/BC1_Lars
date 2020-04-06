@@ -1,7 +1,7 @@
-# BC1_Spare2 
-bettercodehub: [![BCH compliance](https://bettercodehub.com/edge/badge/web3assignments/BC1_Spare2?branch=master)](https://bettercodehub.com/) 
+# BC1_Lars
+bettercodehub: [![BCH compliance](https://bettercodehub.com/edge/badge/web3assignments/BC1_Lars?branch=master)](https://bettercodehub.com/) 
 <br> 
-THUASMinorBlockchain_20192020B_IT repository for BC1_Spare2 
+THUASMinorBlockchain_20192020B_IT repository for BC1_Lars
 <br> 
 THUASMinorBlockchain_20192020B_IT: [minor] 
 <br> 
