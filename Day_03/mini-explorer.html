@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="mini-explorer.css">
+</head>
+<body>
+<table id="blockTable">
+    <tr>
+        <th>Block</th>
+        <th>Ago</th>
+        <th>Hash</th>
+        <th>Nonce</th>
+        <th>Miner</th>
+    </tr>
+</table>
+<h4>Log:</h4>
+<pre id="log" style="width:100%;height:200px"></pre>
+<script>
+    async function f() {
+        const request = JSON.stringify({"jsonrpc": "2.0", "method": "eth_blockNumber", "params": [], "id": 67});
+        const rawResponse = await fetch('https://mainnet.infura.io/v3/5d6d200f83ee454c93bb9f4fe67650c3', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: request
+        });
+        const content = await rawResponse.json();
+        log(`Current blocknumber = ${parseInt(content.result)}`);
+    }
+
+    f();
+
+    function addToTable(blockInfo) {
+        var tableRef = document.getElementById("blockTable");
+        // Insert a row in the table at the last row
+        var newRow = tableRef.insertRow();
+
+        // Insert a cell in the row at index 0
+        var blockCell = newRow.insertCell(0);
+        var timeCell = newRow.insertCell(1);
+        var hashCell = newRow.insertCell(2);
+        var nonceCell = newRow.insertCell(3);
+        var minerCell = newRow.insertCell(4);
+
+        // Append a text node to the cell
+        var blockNewText = document.createTextNode(parseInt(blockInfo.number));
+        var timeNewText = document.createTextNode(timeSince(blockInfo.timestamp * 1000));
+        var hashNewText = document.createTextNode(blockInfo.hash);
+        var nonceNewText = document.createTextNode(parseInt(blockInfo.nonce));
+        var minerNewText = document.createTextNode(blockInfo.miner);
+        blockCell.appendChild(blockNewText);
+        timeCell.appendChild(timeNewText);
+        hashCell.appendChild(hashNewText);
+        nonceCell.appendChild(nonceNewText);
+        minerCell.appendChild(minerNewText);
+    }
+
+    const server = "wss://mainnet.infura.io/ws/v3/5d6d200f83ee454c93bb9f4fe67650c3";
+    log(`Opening connection to ${server}`);
+    var socket = new WebSocket(server);
+    socket.onopen = function (event) {
+        const request = JSON.stringify({"id": 1, "method": "eth_subscribe", "params": ["newHeads"]});
+        log(`Connection opened, sending: ${request}`);
+        socket.send(request);
+    };
+    socket.onmessage = async function (event) {
+        log(`Received ${event.data}`);
+        var data = JSON.parse(event.data);
+        addToTable(data.params.result);
+        log(`Current blocknumber = ${parseInt(data.params.result.number)}`);
+    };
+    socket.onerror = function (error) {
+        log(`[error] ${error.message}`);
+    };
+
+    function log(logstr) {
+        document.getElementById("log").innerHTML += logstr + "\n";
+    }
+
+    function timeSince(time) {
+        var timeStamp = new Date(time)
+        var now = new Date(),
+            secondsPast = (now.getTime() - timeStamp) / 1000;
+        if (secondsPast < 60) {
+            return parseInt(secondsPast) + 's';
+        }
+        if (secondsPast < 3600) {
+            return parseInt(secondsPast / 60) + 'm';
+        }
+        if (secondsPast <= 86400) {
+            return parseInt(secondsPast / 3600) + 'h';
+        }
+        if (secondsPast > 86400) {
+            day = timeStamp.getDate();
+            month = timeStamp.toDateString().match(/ [a-zA-Z]*/)[0].replace(" ", "");
+            year = timeStamp.getFullYear() == now.getFullYear() ? "" : " " + timeStamp.getFullYear();
+            return day + " " + month + year;
+        }
+    }
+</script>
+</body>
+</html>
