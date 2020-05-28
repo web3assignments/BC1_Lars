@@ -1,4 +1,4 @@
-var badge = artifacts.require("./Badge.sol");
+var badge = artifacts.require("./BadgeGenerator.sol");
 module.exports = function(deployer) {
   deployer.deploy(badge);
 };
