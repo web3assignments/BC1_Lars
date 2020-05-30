@@ -44,8 +44,8 @@ async function start() {
 
 
     await badgeContract.methods.createBadge('test.json').send({from: owner})
-        .then(() => {
-            console.log(`token created`)
+        .then((result) => {
+            console.log(`token created with id: ${result}`)
         })
 
     subscription.unsubscribe(function (error, success) {
