@@ -1,8 +1,8 @@
 
 .idea/
 
-Day_04/node_modules
-
-Day_05/truffle/.secret
-
-Day_05/truffle/.infura
+node_modules/
+package-lock.json
+.secret
+.infura
+build/
