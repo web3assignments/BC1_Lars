@@ -58,10 +58,6 @@ export class Web3Service {
     }
   }
 
-  private update() {
-
-  }
-
   private async enableMetaMaskAccount(): Promise<any> {
     let enable = false;
     await new Promise((resolve, reject) => {
