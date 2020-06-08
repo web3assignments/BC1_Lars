@@ -7,7 +7,7 @@ const infuraKey = fs.readFileSync(".infura").toString().trim();
 module.exports = {
   networks: {
     development: {
-      host: "192.168.1.50",
+      host: "127.0.0.1",
       port: 7545,
       network_id: "*",
       gas: 5000000,
@@ -17,11 +17,13 @@ module.exports = {
       provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/${infuraKey}`),
       network_id: 3,       // Ropsten's id
       gas: 5500000,        // Ropsten has a lower block limit than mainnet
-      skipDryRun: true     // Skip dry run before migrations? (default: false for public nets )
+      confirmations: 2,    // # of confs to wait between deployments. (default: 0)
+      timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
     }
   },
   compilers: {
     solc: {
+      version: "0.5.12",
       optimizer: {
         enabled: true,
         runs: 200

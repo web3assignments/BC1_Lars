@@ -1,9 +1,5 @@
-var Generator = artifacts.require("./BadgeGenerator.sol");
+var Roulette = artifacts.require("./Roulette.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Generator)
-    .then(() => Generator.deployed())
-    .then((instance) => {
-      instance.createBadge("test.json")
-    });
+  deployer.deploy(Roulette);
 };
