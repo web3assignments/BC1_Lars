@@ -1,0 +1,3 @@
+Ik heb gekozen voor de "factory contract" pattern en self destruct pattern.
+
+Op deze manier kunnen de badges als contract gegenereerd worden met een specifiek addres en deze kunnen vervolgens ook verwijderd worden door de self destruct. De Badgefactory is hierdoor een centrale plaats waar alles van de badges kunnen worden bijgehouden.
