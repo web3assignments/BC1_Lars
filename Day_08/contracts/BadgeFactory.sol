@@ -1,11 +1,12 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.0;
 
-import "Badge.sol";
+import "./Badge.sol";
+import "./Mortal.sol";
 
-contract BadgeFactory {
-
-    Badge[] public badges;
-    address owner;
+contract BadgeFactory is Mortal {
+    bytes mmcode = type(Badge).creationCode;
+    Badge public deployedBadge;
 
     mapping(address => bool) public creators;
 
@@ -14,14 +15,16 @@ contract BadgeFactory {
     event removedCreator(address _address);
 
     constructor() public {
-        // set owner of contract
-        owner = msg.sender;
     }
 
-    modifier ownerOnly() {
-        require(msg.sender == owner, 'You are not the owner');
-        _;
+    function SetDeployedBadgeUrl() public view returns (string memory) {
+        return deployedBadge.metadataUrl();
     }
+
+    function DestroyDeployedBadge() public {
+        deployedBadge.destroy();
+    }
+
 
     modifier creatorOnly() {
         require(creators[msg.sender], 'You are not a badge creator');
@@ -38,19 +41,16 @@ contract BadgeFactory {
         emit removedCreator(_address);
     }
 
-    // Creates a new token type and assigns _initialSupply to minter
-    function createBadge() public {
-        Badge newBadge = new Badge(badges.length, msg.sender);
-        badges.push(newBadge);
-        emit badgeCreated(newBadge);
-
+    function DeployViaCreate() public returns (Badge){
+        deployedBadge=Badge(Create(mmcode));
+        deployedBadge.SetUrl("badge-test.json");
+        return deployedBadge;
     }
 
-    function getDeployedChildContracts() public view returns (Badge[] memory) {
-        return badges;
-    }
-
-    function getContractCount() public view returns(uint contractCount) {
-        return badges.length;
+    function Create(bytes memory code) private returns(address addr) {
+        assembly {
+            addr := create(0, add(code, 0x20), mload(code))
+            if iszero(extcodesize(addr)) { revert(0, 0) }
+        }
     }
 }

@@ -1,21 +1,32 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.6.0;
 
-contract Badge {
+import "./Mortal.sol";
 
-    uint256 id;
-    address owner;
+contract Badge is Mortal {
 
-    constructor(uint256 _id, address _owner) public {
-        id = _id;
-        owner = _owner;
-    }
+    string public metadataUrl;
+    mapping(address => bool) badgeCreators;
 
-    modifier ownerOnly() {
-        require(msg.sender == owner, 'You are not the owner');
+    modifier badgeOwnerOnly {
+        require(owner == msg.sender);
         _;
     }
 
-    function destroy() public ownerOnly {
-        selfdestruct(msg.sender);
+    function SetUrl(string memory _url) public {
+        metadataUrl = _url;
     }
+
+    function addBadgeCreator(address _address) public badgeOwnerOnly() {
+        badgeCreators[_address] = true;
+    }
+
+    function removeBadgeCreator(address _address) public badgeOwnerOnly() {
+        badgeCreators[_address] = false;
+    }
+
+    function isBadgeCreator(address _address) public view returns (bool) {
+        return badgeCreators[_address];
+    }
+
 }
