@@ -1,0 +1,17 @@
+{
+  "name": "day_13",
+  "version": "1.0.0",
+  "description": "Place the assignments in this subdirectory",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "web3": "^1.2.9",
+    "content-hash": "^2.5.2",
+    "ethereum-ens": "^0.8.0",
+    "eth-ens-namehash": "^2.0.8"
+  }
+}

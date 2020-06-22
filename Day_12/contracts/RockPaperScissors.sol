@@ -70,9 +70,9 @@ _;
 }
 
 /// @author Lars Meulenbroek
-/// @notice The actual flip function callable for users
-/// @dev This function sends a query to provable
-/// @param _choice a uint either 0 or 1
+/// @notice Play function to start a rock paper scissors game
+/// @dev sends a provable query
+/// @param _choice a uint either 1 or 2 or 3
 function play(uint8 _choice) public payable minimumPrivilege(Privileges.USER) minimumBet(0.1 ether) allowedChoices(_choice) {
 require(
 msg.value * 2 <= address(this).balance,
@@ -86,7 +86,9 @@ emit LogNewProvableQuery("generated random number query");
 pendingGames[queryId] = Game(msg.sender, getChoice(_choice), msg.value);
 }
 
-
+/// @author Lars Meulenbroek
+/// @notice function to get the choice of the user
+/// @param _choice a uint either 1 or 2 or 3
 function getChoice(uint8 _choice) private pure returns (GameChoices choice) {
 if (_choice == 1) {
 return GameChoices.ROCK;
@@ -97,18 +99,32 @@ return GameChoices.SCISSOR;
 }
 }
 
+/// @author Lars Meulenbroek
+/// @notice function to return all player losses
 function getMyLosses() public minimumPrivilege(Privileges.USER) returns (uint256 losses) {
 return playerLosses[msg.sender];
 }
 
+
+/// @author Lars Meulenbroek
+/// @notice function to return all player earnings
 function getMyEarnings() public minimumPrivilege(Privileges.USER) returns (uint256 earnings) {
 return playerEarnings[msg.sender];
 }
 
+
+/// @author Lars Meulenbroek
+/// @notice function to delete all played games of specific player
 function deletePlayerGames(address _address) public minimumPrivilege(Privileges.ADMIN) {
 delete playerGames[_address];
+delete playerLosses[_address];
+delete playerEarnings[_address];
+
 }
 
+/// @author Lars Meulenbroek
+/// @notice function to calculate the winner of the played game
+/// @param _choice and _opponentChoice are both GameChoices types
 function calculateGameResult(GameChoices _choice, GameChoices _opponentChoice) private pure returns (bool playerWon) {
 if (_choice == GameChoices.ROCK) {
 if (_opponentChoice == GameChoices.SCISSOR) {
@@ -133,6 +149,9 @@ return false;
 
 }
 
+
+/// @author Lars Meulenbroek
+/// @dev callback function to be executed only by the provable address when a provable query is send back
 function __callback(bytes32 _queryId, string memory _result) public override {
 require(msg.sender == provable_cbAddress());
 GameChoices result = getChoice(uint8(uint256(keccak256(abi.encodePacked(_result))) % 2));
